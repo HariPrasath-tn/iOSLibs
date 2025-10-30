@@ -12,8 +12,7 @@ import Foundation
 
 // MARK: - CoreDataEntity Protocol
 /// Protocol to unify entity-related methods and defaults.
-@MainActor
-public protocol CoreDataEntity: NSManagedObject {
+nonisolated public protocol CoreDataEntity: NSManagedObject {
     
     static var entityName: String { get }
     
@@ -39,7 +38,7 @@ extension CoreDataEntity {
     
     // MARK: Save
     /// Saves the current context if it has changes.
-    func save() throws {
+    public func save() throws {
         
         guard let context = self.managedObjectContext, context.hasChanges else { return }
         try context.save()
@@ -47,7 +46,7 @@ extension CoreDataEntity {
     
     // MARK: Refresh
     /// Ensures the entity is in a non-faulted state in the main context.
-    func refresh() -> Self {
+    @MainActor func refresh() -> Self {
         
         guard isFault else { return self }
         let context = CoreDataDB.shared.mainContext
@@ -57,12 +56,12 @@ extension CoreDataEntity {
     
     // MARK: Update
     /// Saves the context if there are changes.
-    func update() throws {
+    public func update() throws {
         
         try save()
     }
     
-    static func get(fetchRequest: NSFetchRequest<Self>) throws -> [Self] {
+    @MainActor public static func get(fetchRequest: NSFetchRequest<Self>) throws -> [Self] {
         
         do {
             
@@ -73,13 +72,10 @@ extension CoreDataEntity {
             throw error
         }
     }
-}
-
-extension CoreDataEntity {
     
     // MARK: entityFetchRequest
     /// Method to generate the fetch request for the current NSManagedObject
-    static func entityFetchRequest(predicate: PredicateSortDescriptor<Self>?) -> NSFetchRequest<Self> {
+    public static func entityFetchRequest(predicate: PredicateSortDescriptor<Self>?) -> NSFetchRequest<Self> {
         
         let request = NSFetchRequest<Self>(entityName: entityName)
         request.returnsObjectsAsFaults = false
@@ -103,7 +99,7 @@ extension CoreDataEntity {
     // TODO: Need to optimise these function usage by providing support for fetch from background thread too
     // MARK: Get First
     /// Returns the first entity matching the given predicate in the main context.
-    static func GetFirst(predicate: PredicateSortDescriptor<Self>? = nil) throws -> Self? {
+    @MainActor public static func GetFirst(predicate: PredicateSortDescriptor<Self>? = nil) throws -> Self? {
         
         do {
             
@@ -118,7 +114,7 @@ extension CoreDataEntity {
     // FIXME: Code below and the code in the context extenxion are having the same repetative code so need to make the code's source of truth one
     // MARK: Get
     /// Returns all entities matching the given predicate in the main context.
-    static func Get(predicate: PredicateSortDescriptor<Self>? = nil) throws -> [Self] {
+    @MainActor public static func Get(predicate: PredicateSortDescriptor<Self>? = nil) throws -> [Self] {
         
         do {
             
@@ -133,7 +129,7 @@ extension CoreDataEntity {
     // FIXME: Code below and the code in the context extenxion are having the same repetative code so need to make the code's source of truth one
     // MARK: Get Count
     /// Returns the count of entities matching the given predicate in the main context.
-    static func GetCount(predicate: PredicateSortDescriptor<Self>? = nil) throws -> Int {
+    @MainActor public static func GetCount(predicate: PredicateSortDescriptor<Self>? = nil) throws -> Int {
         
         do {
             
@@ -148,7 +144,7 @@ extension CoreDataEntity {
     // FIXME: Code below and the code in the context extenxion are having the same repetative code so need to make the code's source of truth one
     // MARK: Batch Delete Objects
     /// Performs a batch delete for the entity, using the given predicate if provided.
-    static func batchDelete(
+    public static func batchDelete(
         _ predicate: PredicateSortDescriptor<Self>? = nil
     ) async throws {
         

@@ -15,38 +15,38 @@ import CoreData
 /// PredicateSortDescriptor is a type safe predicate generator, to reduce the predicate mismatch
 public struct PredicateSortDescriptor<T: NSManagedObject> {
     
-    var predicate: Predicate<T>?
+    public var predicate: Predicate<T>?
     
-    var sortDescriptors: [SortDescriptor<T>] = []
+    public var sortDescriptors: [SortDescriptor<T>] = []
     
-    var limit: Int?
+    public var limit: Int?
     
     private var _nsPredicate: NSPredicate?
     
     private var _nsSortDescriptor: [NSSortDescriptor] = []
     
 
-    init(predicate: Predicate<T>?, sortDescriptors: [SortDescriptor<T>], limit: Int? = nil) {
+    public init(predicate: Predicate<T>?, sortDescriptors: [SortDescriptor<T>], limit: Int? = nil) {
         
         self.predicate = predicate
         self.sortDescriptors = sortDescriptors
         self.limit = limit
     }
     
-    init(nsPredicate: NSPredicate?, nsSortDescriptors: [NSSortDescriptor] = [], limit: Int? = nil) {
+    public init(nsPredicate: NSPredicate?, nsSortDescriptors: [NSSortDescriptor] = [], limit: Int? = nil) {
         
         self._nsPredicate = nsPredicate
         self._nsSortDescriptor = nsSortDescriptors
         self.limit = limit
     }
     
-    var nsPredicate: NSPredicate? {
+    public var nsPredicate: NSPredicate? {
         
         return if let _nsPredicate { _nsPredicate } else if let predicate { NSPredicate(predicate) }
             else { nil }
     }
     
-    var nsSortDescriptors: [NSSortDescriptor]? {
+    public var nsSortDescriptors: [NSSortDescriptor]? {
         
         return if !_nsSortDescriptor.isEmpty { _nsSortDescriptor } else if !sortDescriptors.isEmpty { sortDescriptors.map { NSSortDescriptor($0) } }
         else { nil }
@@ -57,12 +57,12 @@ public struct PredicateSortDescriptor<T: NSManagedObject> {
 // MARK: - General Custom predicate
 extension PredicateSortDescriptor {
     
-    static func none() -> PredicateSortDescriptor {
+    public static func none() -> PredicateSortDescriptor {
         
         .init(predicate: nil, sortDescriptors: [])
     }
     
-    static func custom(
+    public static func custom(
         predicate: Predicate<T>?,
         sortDescriptors: [SortDescriptor<T>],
         limit: Int? = nil
@@ -71,7 +71,7 @@ extension PredicateSortDescriptor {
         .init(predicate: predicate, sortDescriptors: sortDescriptors, limit: limit)
     }
     
-    static func custom(
+    public static func custom(
         nsPredicate: NSPredicate?,
         nsSortDescriptors: [NSSortDescriptor] = [],
         limit: Int? = nil

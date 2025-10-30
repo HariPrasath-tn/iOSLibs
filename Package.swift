@@ -19,11 +19,11 @@ let package = Package(
     targets: [
         .target(
             name: "CoredataWrapperLib",
-            path: "CoredataWrapperLib/Sources/CoredataWrapperLib"
+            path: "CoredataWrapperLib/Sources"
         ),
         .target(
             name: "CommonUtils",
-            path: "CommonUtils/Sources/CommonUtils"
+            path: "CommonUtils/Sources"
         )
     ]
 )

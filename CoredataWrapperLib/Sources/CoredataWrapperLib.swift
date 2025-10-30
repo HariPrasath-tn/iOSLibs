@@ -36,7 +36,7 @@ public actor CoreDataDB {
     // MARK: - Persistent Container
     /// The main persistent container used to manage the CoreData stack.
     /// Use `mainContext` or `newBackgroundContext()` for CRUD operations.
-    nonisolated private let container: NSPersistentContainer
+    nonisolated(unsafe) private var container: NSPersistentContainer
     
     // MARK: - Main Context (on MainActor)
     /// The main context associated with the container's viewContext.
@@ -247,14 +247,14 @@ public actor CoreDataDB {
 
 
 // MARK: - Async Functionalities
-extension CoreDataDB {
+public extension CoreDataDB {
     
     
     // MARK: Insert (Single Object)
     /// Inserts a single managed object (created via a closure) into a background context,
     /// saves it, and then returns it. Accepts a completion closure for further usage.
     @discardableResult
-    public func insert<T: NSManagedObject>(
+    func insert<T: NSManagedObject>(
         _ createBlock: @escaping (NSManagedObjectContext) async -> T,
         completion: @escaping (T) -> Void = { _ in }
     ) async throws -> T {
@@ -278,10 +278,11 @@ extension CoreDataDB {
     /// Inserts multiple objects (created via a closure) into a background context,
     /// saves them, and then returns them. Accepts a completion closure for further usage.
     @discardableResult
-    public func insert<T: NSManagedObject>(
+    func insert<T: NSManagedObject>(
         _ createBlock: @escaping (NSManagedObjectContext) async -> [T],
         completion: @escaping () -> Void = {}
     ) async throws -> [T] {
+        
         let bgContext = newBackgroundContext()
         let models = await createBlock(bgContext)
         
@@ -304,7 +305,7 @@ extension CoreDataDB {
     /// Inserts multiple objects (created via a closure) into a background context,
     /// saves them, and then returns them. Accepts a completion closure for further usage.
     @discardableResult
-    public func insert<T: NSManagedObject>(
+    func insert<T: NSManagedObject>(
         _ createBlock: @escaping (NSManagedObjectContext) async throws -> [T],
         completion: @escaping () -> Void = {}
     ) async throws -> [T] {
@@ -328,7 +329,7 @@ extension CoreDataDB {
     
     // MARK: Delete (Single Object)
     /// Deletes a specific managed object from a background context and saves.
-    public func delete<T: NSManagedObject>(
+    func delete<T: NSManagedObject>(
         _ object: T
     ) async throws {
         let bgContext = newBackgroundContext()
@@ -346,7 +347,7 @@ extension CoreDataDB {
     
     // MARK: Delete (Multiple Objects)
     /// Deletes multiple managed objects from a background context and saves.
-    public func delete<T: NSManagedObject>(_ objects: [T]) async throws {
+    func delete<T: NSManagedObject>(_ objects: [T]) async throws {
         let bgContext = newBackgroundContext()
         for object in objects {
             let existingObject = bgContext.object(with: object.objectID)
@@ -384,7 +385,7 @@ extension CoreDataDB {
     // MARK: Batch Delete
     /// Performs a batch delete for the given fetch request in a background context.
     /// Resets both the background and main contexts to ensure consistency.
-    public func batchDelete(
+    func batchDelete(
         _ fetchRequest: NSFetchRequest<NSFetchRequestResult>
     ) async throws {
         
@@ -426,7 +427,7 @@ extension CoreDataDB {
     
     // MARK: Counting
     /// Returns the count of entities matching the given `fetchRequest` in a background context.
-    public func fetchEntitiesCount<T: NSManagedObject>(
+    func fetchEntitiesCount<T: NSManagedObject>(
         _ fetchRequest: NSFetchRequest<T>
     ) async throws -> Int {
         
@@ -439,7 +440,7 @@ extension CoreDataDB {
 
 
 // MARK: - Context Data fetch operations
-extension NSManagedObjectContext {
+public extension NSManagedObjectContext {
     
     func getObject<T: NSManagedObject & CoreDataEntity>(predicate: PredicateSortDescriptor<T>) -> T {
         
