@@ -58,7 +58,7 @@ public actor CoreDataDB {
     /// If loading fails, the app will terminate with a fatalError.
     private init(
         isInMemoryOnlyMode: Bool = false,
-        containerName: String = "Model",
+        containerName: String = "PhotosExplorer",
         registerTransformars: (() -> ())? = nil,
         dbStorageLocation: DBStorageLocation = .app
     ) {
@@ -73,7 +73,7 @@ public actor CoreDataDB {
             
         } else {
             
-            let url = containerUrl()
+            let url = containerUrl(storeName: containerName)
             let storeDescription = NSPersistentStoreDescription(url: url)
             container.persistentStoreDescriptions = [storeDescription]
         }
@@ -193,8 +193,9 @@ public actor CoreDataDB {
     // MARK: - Store URL Helpers
     /// Returns the file URL of the persistent store.
     /// Customize to point to an App Group or a local app container.
-    nonisolated public func containerUrl(storeName: String = "Model.sqlite") -> URL {
+    nonisolated public func containerUrl(storeName: String) -> URL {
         
+        let storeName = storeName + ".sqlite"
         if case let .appGroup(appGroup) = dbStorageLocation,
            let containerURL = FileManager.default
                .containerURL(forSecurityApplicationGroupIdentifier: appGroup){
@@ -215,8 +216,9 @@ public actor CoreDataDB {
     
     /// Deletes the existing store at the specified path (if it exists).
     /// Typically used only for debugging or testing scenarios.
-    private func deleteStoreIfExists(storeName: String = "Model.sqlite") {
-        
+    private func deleteStoreIfExists(storeName: String) {
+    
+        let storeName = storeName + ".sqlite"
         let storePath = containerUrl(storeName: storeName).path
         
         if FileManager.default.fileExists(atPath: storePath) {
