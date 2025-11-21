@@ -109,7 +109,7 @@ public extension Date {
         case timeIntervalSinceDate(Date)
     }
     
-    enum DateFormat {
+    enum iDateFormat {
         
         case ddMMYYYY(seperator: Character = "/")
         case yyyyMMdd(seperator: Character = "/")
@@ -170,7 +170,7 @@ public extension Date {
         }
     }
     
-    func stringDate(format: DateFormat, timeZone: TimeZone = .current) -> String {
+    func istringDate(format: iDateFormat, timeZone: TimeZone = .current) -> String {
         
         let formatter = DateFormatter()
         formatter.dateFormat = format.format

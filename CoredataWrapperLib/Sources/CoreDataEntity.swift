@@ -157,7 +157,7 @@ extension CoreDataEntity {
             
             fetchRequest.fetchLimit = limit
         }
-//        try await CoreDataDB.shared.batchDelete(fetchRequest)
+        try await CoreDataDB.shared.batchDelete(fetchRequest)
     }
     
 //    TODO: Need to find a best solution for this

@@ -387,11 +387,11 @@ public extension CoreDataDB {
     // MARK: Batch Delete
     /// Performs a batch delete for the given fetch request in a background context.
     /// Resets both the background and main contexts to ensure consistency.
-    func batchDelete(
+    nonisolated func batchDelete(
         _ fetchRequest: NSFetchRequest<NSFetchRequestResult>
     ) async throws {
         
-        let bgContext = newBackgroundContext()
+        let bgContext = await newBackgroundContext()
         let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         batchDeleteRequest.resultType = .resultTypeObjectIDs
         do {
@@ -403,7 +403,7 @@ public extension CoreDataDB {
                 await NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [mainContext])
             } else {
                 
-                try saveContext(bgContext)
+                try await saveContext(bgContext)
                 bgContext.reset()
                 // Reset main context on the main actor
                 await MainActor.run {
