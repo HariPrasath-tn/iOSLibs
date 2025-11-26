@@ -139,7 +139,7 @@ public actor CoreDataDB {
             do {
                 try mainContext.execute(batchDeleteRequest)
             } catch {
-                debugPrint("[+] Error executing batch delete for \(entityName): \(error.localizedDescription)")
+                debugPrint("[-] Error executing batch delete for \(entityName): \(error.localizedDescription)")
                 throw error
             }
         }

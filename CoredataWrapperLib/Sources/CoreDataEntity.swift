@@ -68,7 +68,7 @@ extension CoreDataEntity {
             return try CoreDataDB.shared.mainContext.fetch(fetchRequest)
         } catch {
             
-            debugPrint("[CoreDataEntity] Failed to fetch entities: \(error)")
+            debugPrint("[-] Failed to fetch entities: \(error)")
             throw error
         }
     }
@@ -106,7 +106,7 @@ extension CoreDataEntity {
             return try CoreDataDB.shared.mainContext.fetch(entityFetchRequest(predicate: predicate)).first
         } catch {
             
-            debugPrint("[CoreDataEntity] Failed to fetch entities: \(error)")
+            debugPrint("[-] Failed to fetch entities: \(error)")
             throw error
         }
     }
@@ -121,7 +121,7 @@ extension CoreDataEntity {
             return try CoreDataDB.shared.mainContext.fetch(entityFetchRequest(predicate: predicate))
         } catch {
             
-            debugPrint("[CoreDataEntity] Failed to fetch entities: \(error)")
+            debugPrint("[-] Failed to fetch entities: \(error)")
             throw error
         }
     }
@@ -136,7 +136,7 @@ extension CoreDataEntity {
             return try CoreDataDB.shared.fetchCount(entityFetchRequest(predicate: predicate))
         } catch {
             
-            debugPrint("[CoreDataEntity] Failed to fetch entity count: \(error)")
+            debugPrint("[-] Failed to fetch entity count: \(error)")
             throw error
         }
     }
