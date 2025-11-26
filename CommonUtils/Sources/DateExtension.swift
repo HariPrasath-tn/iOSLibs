@@ -15,7 +15,7 @@ public extension Date {
         case before
     }
     
-    func date(_ period: Period, offset: TimeUnit) -> Date {
+    func iDate(_ period: Period, offset: iTimeUnit) -> Date {
         
         let timeInterval = offset.timeInterval
         
@@ -25,7 +25,7 @@ public extension Date {
         }
     }
     
-    enum TimeUnit {
+    enum iTimeUnit {
         
         case seconds(Double)
         
@@ -70,7 +70,7 @@ public extension Date {
     ///   - timeUnit: The time unit to compare against
     ///   - tolerance: Tolerance for equalTo comparison (default: 1 second)
     /// - Returns: Boolean result of the comparison
-    func isTimeConditionMet(_ logicalOperator: LogicalOperator, timeUnit: TimeUnit, tolerance: TimeInterval = 1.0) -> Bool {
+    func isTimeConditionMet(_ logicalOperator: LogicalOperator, timeUnit: iTimeUnit, tolerance: TimeInterval = 1.0) -> Bool {
         
         let actualInterval = abs(self.timeIntervalSinceNow)
         let targetInterval = timeUnit.timeInterval
