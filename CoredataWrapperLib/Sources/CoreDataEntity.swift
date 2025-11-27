@@ -169,4 +169,23 @@ extension CoreDataEntity {
 //            try CoreDataDB.shared.delete(objects)
 //        }
 //    }
+    
+    public static func batchUpdate(propertiesToUpdate: [AnyHashable : Any]?, predicate: PredicateSortDescriptor<Self>? = nil) async throws {
+        
+        let context = await CoreDataDB.shared.backgroudContext()
+        let mainContext = await CoreDataDB.shared.mainContext
+        try context.performAndWait {
+            
+            let batchUpdateRequest = NSBatchUpdateRequest.init(entityName: Self.entityName)
+            batchUpdateRequest.predicate = predicate?.nsPredicate
+            batchUpdateRequest.propertiesToUpdate = propertiesToUpdate
+            batchUpdateRequest.resultType = .updatedObjectIDsResultType
+            let result = try context.execute(batchUpdateRequest) as? NSBatchUpdateResult
+            if let objectIDs = result?.result as? [NSManagedObjectID], !objectIDs.isEmpty {
+                // Merge changes into viewContext so UI updates
+                let changes: [AnyHashable: Any] = [NSUpdatedObjectsKey: objectIDs]
+                NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [mainContext])
+            }
+        }
+    }
 }
