@@ -149,7 +149,7 @@ public actor CoreDataDB {
     // MARK: Delete All Data
     /// Deletes all instances of the given CoreData entity type in a background context,
     /// and then saves. This is an async method that will switch to a background context.
-    func deleteAllData<Entity: CoreDataEntity>(_ type: Entity.Type) async throws {
+    public func deleteAllData<Entity: CoreDataEntity>(_ type: Entity.Type) async throws {
         
         let bgContext = newBackgroundContext()
         let fetchRequest = Entity.entityFetchRequest(predicate: .none())
@@ -216,7 +216,7 @@ public actor CoreDataDB {
     
     /// Deletes the existing store at the specified path (if it exists).
     /// Typically used only for debugging or testing scenarios.
-    private func deleteStoreIfExists(storeName: String) {
+    public  func deleteStoreIfExists(storeName: String) {
     
         let storeName = storeName + ".sqlite"
         let storePath = containerUrl(storeName: storeName).path
