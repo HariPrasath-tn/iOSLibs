@@ -58,7 +58,7 @@ public extension Date {
         }
     }
     
-    enum LogicalOperator {
+    enum iLogicalOperator {
         case greaterThan
         case lessThan
         case equalTo
@@ -70,7 +70,7 @@ public extension Date {
     ///   - timeUnit: The time unit to compare against
     ///   - tolerance: Tolerance for equalTo comparison (default: 1 second)
     /// - Returns: Boolean result of the comparison
-    func isTimeConditionMet(_ logicalOperator: LogicalOperator, timeUnit: iTimeUnit, tolerance: TimeInterval = 1.0) -> Bool {
+    func _isTimeConditionMet(_ logicalOperator: iLogicalOperator, timeUnit: iTimeUnit, tolerance: TimeInterval = 1.0) -> Bool {
         
         let actualInterval = abs(self.timeIntervalSinceNow)
         let targetInterval = timeUnit.timeInterval
@@ -88,20 +88,20 @@ public extension Date {
     }
     
     func timeInMillisAsInt64(
-        timeIntervalFrom: TimeIntervalFrom = .timeIntervalSince1970
+        timeIntervalFrom: iTimeIntervalFrom = .timeIntervalSince1970
     ) -> Int64 {
         
         return Int64(self.timeIntervalSince1970 * 1000)
     }
     
     func timeInMillisAsDouble(
-        timeIntervalFrom: TimeIntervalFrom = .timeIntervalSince1970
+        timeIntervalFrom: iTimeIntervalFrom = .timeIntervalSince1970
     ) -> Double {
         
         return self.timeIntervalSince1970 * 1000
     }
     
-    enum TimeIntervalFrom {
+    enum iTimeIntervalFrom {
         
         case timeIntervalSince1970
         case timeIntervalSinceNow
