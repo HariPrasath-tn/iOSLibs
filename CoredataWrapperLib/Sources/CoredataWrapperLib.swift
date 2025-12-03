@@ -58,7 +58,7 @@ public actor CoreDataDB {
     /// If loading fails, the app will terminate with a fatalError.
     private init(
         isInMemoryOnlyMode: Bool = false,
-        containerName: String = "PhotosExplorer",
+        containerName: String = "Model",
         registerTransformars: (() -> ())? = nil,
         dbStorageLocation: DBStorageLocation = .app
     ) {
